@@ -66,7 +66,7 @@ func (m *EventRequest) GetEmail() string {
 	return ""
 }
 
-// The response message containing the greetings
+// The response message containing the event
 type Event struct {
 	Uid         string            `protobuf:"bytes,1,opt,name=uid" json:"uid,omitempty"`
 	Id          string            `protobuf:"bytes,2,opt,name=id" json:"id,omitempty"`
