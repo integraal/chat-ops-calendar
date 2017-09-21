@@ -13,6 +13,7 @@ import (
 	"github.com/caarlos0/env"
 	"fmt"
 	"strings"
+	"golang.org/x/net/context"
 )
 
 type Server struct {
@@ -46,15 +47,14 @@ func (c *Server) getParser(email string, start string, end string) (*Parser, err
 	return &Parser{}, nil
 }
 
-func (s *Server) GetEvents(in *calendar.EventRequest, stream calendar.Calendar_GetEventsServer) error {
+func (s *Server) GetEvents(ctx context.Context, in *calendar.EventRequest) (*calendar.EventCollection, error) {
 	parser, err := s.getParser(in.Email, in.Start, in.End)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	for _, e := range parser.GetEvents() {
-		stream.Send(e)
-	}
-	return nil
+	return &calendar.EventCollection{
+		Items: parser.GetEvents(),
+	}, nil
 }
 
 func main() {
@@ -63,7 +63,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	fmt.Println("Started listening " + server.BindAddress)
+	log.Println("Started listening " + server.BindAddress)
 	rpc := grpc.NewServer()
 	calendar.RegisterCalendarServer(rpc, server)
 	// Register reflection service on gRPC server.
