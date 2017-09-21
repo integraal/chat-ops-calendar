@@ -1,4 +1,4 @@
 .idea
 vendor
 .env
-*.pb.go
+./**/*.pb.go
