@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package calendar;
+
+// The greeting service definition.
+service Calendar {
+    // Sends a greeting
+    rpc GetEvents (EventRequest) returns (stream Event) {}
+}
+
+// The request message containing the user's name.
+message EventRequest {
+    string start = 1;
+    string end = 2;
+    string email = 3;
+}
+
+// The response message containing the event
+message Event {
+    string uid = 1;
+    string id = 2;
+    int64 start = 3;
+    int64 end = 4;
+    string summary = 5;
+    string description = 6;
+    message Attendee {
+        string email = 1;
+    }
+    repeated Attendee attendees = 7;
+}
